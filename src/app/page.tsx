@@ -1,9 +1,9 @@
-
+import RandomNumber from "@/components/RandomNumber";
 
 export default function Home() {
   return (
     <div>
-      Hola mundo!
+      <RandomNumber />
     </div>
   );
 }
