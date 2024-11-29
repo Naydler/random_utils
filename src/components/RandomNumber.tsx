@@ -81,6 +81,16 @@ export const RandomNumber = () => {
                     No repetir número
                 </label>
             </div>
+            <div className="flex gap-2 mb-4">
+                <p className="font-medium">Números generados:</p>
+                <div className="flex gap-2">
+                    {generatedNumbers.map((num) => (
+                        <span key={num} className="bg-gray-200 px-2 py-1 rounded-md">
+                            {num}
+                        </span>
+                    ))}
+                </div>
+            </div>
             <button
                 onClick={handleGenerate}
                 className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
