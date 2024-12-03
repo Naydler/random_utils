@@ -1,9 +1,10 @@
-import RandomNumber from "@/components/RandomNumber";
+import { MainPage } from '../components/home';
 
 export default function Home() {
   return (
     <div>
-      <RandomNumber />
+      <MainPage />
     </div>
   );
+  
 }
