@@ -9,6 +9,7 @@ const menuItems = [
     { id: 2, title: 'Team Divider', image: '/placeholder.svg?height=80&width=80', path: '/random-team', gradient: 'from-green-500 to-teal-500' },
     { id: 3, title: 'Random Roulette', image: '/placeholder.svg?height=80&width=80', path: '/random-roulette', gradient: 'from-blue-500 to-indigo-500' },
     { id: 4, title: 'Dice', image: '/placeholder.svg?height=80&width=80', path: '/dice', gradient: 'from-yellow-500 to-orange-500' },
+    { id: 5, title: 'SecretSanta', image: '/placeholder.svg?height=80&width=80', path: '/secret-santa', gradient: 'from-red-500 to-green-500' },
 ];
 
 export const MainPage = () => {
