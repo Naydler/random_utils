@@ -18,7 +18,7 @@ export default function SecretSanta() {
     const [participants, setParticipants] = useState<Participant[]>([])
     const [newParticipant, setNewParticipant] = useState({ name: '', email: '', wishlist: '' })
     const [editingId, setEditingId] = useState<number | null>(null)
-    const [selfExclusions, setSelfExclusions] = useState<{ [id: number]: boolean }>({}) // Estado para restricciones
+    const [selfExclusions, setSelfExclusions] = useState<{ [id: number]: boolean }>({}) 
 
     const addParticipant = () => {
         if (newParticipant.name && newParticipant.email) {
@@ -42,7 +42,7 @@ export default function SecretSanta() {
         if (editingId !== null) {
             setParticipants(participants.map(p =>
                 p.id === editingId
-                    ? { ...newParticipant, id: p.id, restrictions: p.restrictions || [] } // Mantén las restricciones existentes
+                    ? { ...newParticipant, id: p.id, restrictions: p.restrictions || [] } 
                     : p
             ));
             setEditingId(null);
@@ -57,19 +57,14 @@ export default function SecretSanta() {
         setSelfExclusions(updatedExclusions)
     }
 
-    const toggleSelfExclusion = (id: number) => {
-        setSelfExclusions((prev) => ({
-            ...prev,
-            [id]: !prev[id],
-        }))
-    }
+    
     const toggleRestriction = (giverId: number, receiverId: number) => {
         setParticipants((prev) =>
             prev.map((participant) => {
                 if (participant.id === giverId) {
                     const restrictions = participant.restrictions.includes(receiverId)
-                        ? participant.restrictions.filter((id) => id !== receiverId) // Quita la restricción
-                        : [...participant.restrictions, receiverId]; // Añade la restricción
+                        ? participant.restrictions.filter((id) => id !== receiverId) 
+                        : [...participant.restrictions, receiverId]; 
 
                     return { ...participant, restrictions };
                 }
@@ -78,16 +73,16 @@ export default function SecretSanta() {
         );
     };
 
-    const handlerLottery = () => {
+    const handlerLottery = async () => {
         if (participants.length < 2) {
             alert("Debe haber al menos dos participantes para realizar el sorteo.");
             return;
         }
 
-        const assignments: { giver: string; receiver: string }[] = [];
-        const unassigned = [...participants]; // Lista de posibles receptores
+        const assignments: { giver: string; receiver: string; email: string; wishlist: string }[] = [];
+        let unassigned = [...participants];
 
-        participants.forEach((giver) => {
+        for (const giver of participants) {
             const possibleReceivers = unassigned.filter(
                 (receiver) => !giver.restrictions.includes(receiver.id) && receiver.id !== giver.id
             );
@@ -97,24 +92,46 @@ export default function SecretSanta() {
                 return;
             }
 
-            // Selecciona un receptor aleatorio de los posibles
-            const receiverIndex = Math.floor(Math.random() * possibleReceivers.length);
-            const receiver = possibleReceivers[receiverIndex];
+            const receiver = possibleReceivers[Math.floor(Math.random() * possibleReceivers.length)];
 
-            assignments.push({ giver: giver.name, receiver: receiver.name });
-            unassigned.splice(unassigned.indexOf(receiver), 1);
-        });
+            assignments.push({
+                giver: giver.name,
+                receiver: receiver.name,
+                email: giver.email,
+                wishlist: receiver.wishlist || 'Sin wishlist'
+            });
 
-        
+            unassigned = unassigned.filter((p) => p.id !== receiver.id);
+        }
 
-        console.table(assignments);
-        alert("¡Sorteo realizado! Revisa la consola para ver los resultados.");
-    };
+        for (const assignment of assignments) {
+            console.log('Enviando correo con los datos:', assignment); 
+            try {
+                const response = await fetch('http://localhost:3000/api/sendEmail', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        to: assignment.email,
+                        subject: 'Tu Amigo Invisible 🎅',
+                        giver: assignment.giver,
+                        receiver: assignment.receiver,
+                        wishlist: assignment.wishlist,
+                    }),
+                });
 
+                if (!response.ok) {
+                    console.error(`Error al enviar correo a ${assignment.email}`);
+                }
+            } catch (error) {
+                console.error(`Error en la solicitud para ${assignment.email}:`, error);
+            }
+        }
+
+        alert("¡Sorteo realizado y correos enviados!");
+    }
     return (
         <div className="container mx-auto p-4 space-y-8">
             <h1 className="text-3xl font-bold mb-6">Secret Santa / Amigo Invisible</h1>
-
             <Card className="mb-8">
                 <CardHeader>
                     <CardTitle>Añadir Participante</CardTitle>
@@ -167,7 +184,7 @@ export default function SecretSanta() {
                                     <TableCell>
                                         <div className="flex flex-col space-y-2">
                                             {participants
-                                                .filter(p => p.id !== participant.id) // Excluye a sí mismo
+                                                .filter(p => p.id !== participant.id)
                                                 .map((otherParticipant) => (
                                                     <label key={otherParticipant.id} className="flex items-center space-x-2">
                                                         <input
