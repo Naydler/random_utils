@@ -3,8 +3,8 @@ import nodemailer from 'nodemailer';
 
 export async function POST(req: Request) {
     try {
-        const { to, subject, giver, receiver, wishlist } = await req.json();
-        console.log('Parámetros:', { to, subject, giver, receiver, wishlist });
+        const { to, subject, giver, receiver, wishlist, creatorName, giftPrice, eventDate, location } = await req.json();
+        console.log('Parámetros:', { to, subject, giver, receiver, wishlist, creatorName, giftPrice, eventDate, location });
 
         if (!to || !subject || !giver || !receiver || !wishlist) {
             console.warn('Faltan parámetros requeridos:', { to, subject, giver, receiver, wishlist });
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
             },
         });
 
-        const emailText = `¡Hola ${giver}!\n\nTu amigo invisible es: ${receiver}.\n\n¡Diviértete planeando tu regalo! \n\nAquí tienes una pista sobre lo que le gustaría: ${wishlist}`;
+        const emailText = `¡Hola ${giver}!\n\nTu amigo invisible es: ${receiver}.\n\n¡Diviértete planeando tu regalo! \n\nAquí tienes una pista sobre lo que le gustaría: ${wishlist}.\n\n infomración adicional: \n\nNombre del creador del evento: ${creatorName}\n\nPrecio del regalo: ${giftPrice}\n\nFecha del evento: ${eventDate}\n\nUbicación del evento: ${location}\n\n`;
 
         try {
             const info = await transporter.sendMail({
