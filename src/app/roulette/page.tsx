@@ -8,15 +8,7 @@ export default function Roulette() {
     const [options, setOptions] = useState<{ id: number; text: string }[]>([]);
     const [newOption, setNewOption] = useState('');
 
-    const handleAddOption = () => {
-        if (newOption.trim()) {
-            setOptions([
-                ...options,
-                { id: options.length + 1, text: newOption.trim() }
-            ]);
-            setNewOption('');
-        }
-    };
+
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-row items-center justify-center gap-8 p-8">
