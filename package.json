@@ -21,6 +21,7 @@
     "nodemailer": "^6.9.16",
     "random_utils": "file:",
     "react": "19.0.0-rc-66855b96-20241106",
+    "react-custom-roulette": "^1.4.1",
     "react-dom": "19.0.0-rc-66855b96-20241106",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7"
