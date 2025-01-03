@@ -4,23 +4,40 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { PartyPopper, Pencil, Trash2 } from 'lucide-react'
+import { Car, PartyPopper, Pencil, Trash2 } from 'lucide-react'
+import { info } from 'console'
 
 interface Participant {
     id: number;
     name: string;
     email: string;
     wishlist: string;
-    restrictions: number[]; 
+    restrictions: number[];
+}
+interface EventDetails {
+    creatorName: string;
+    giftPrice: string;
+    eventDate: string;
+    location: string;
 }
 
 export default function SecretSanta() {
     const [participants, setParticipants] = useState<Participant[]>([])
     const [newParticipant, setNewParticipant] = useState({ name: '', email: '', wishlist: '' })
     const [editingId, setEditingId] = useState<number | null>(null)
-    const [selfExclusions, setSelfExclusions] = useState<{ [id: number]: boolean }>({}) 
+    const [selfExclusions, setSelfExclusions] = useState<{ [id: number]: boolean }>({})
+    const [eventDetails, setEventDetails] = useState<EventDetails>({
+        creatorName: '',
+        giftPrice: '',
+        eventDate: '',
+        location: ''
+    });
 
+    const handleEventDetailsChange = (field: keyof EventDetails, value: string) => {
+        setEventDetails((prev) => ({ ...prev, [field]: value }));
+    };
     const addParticipant = () => {
+        console.log(eventDetails);
         if (newParticipant.name && newParticipant.email) {
             setParticipants([
                 ...participants,
@@ -42,7 +59,7 @@ export default function SecretSanta() {
         if (editingId !== null) {
             setParticipants(participants.map(p =>
                 p.id === editingId
-                    ? { ...newParticipant, id: p.id, restrictions: p.restrictions || [] } 
+                    ? { ...newParticipant, id: p.id, restrictions: p.restrictions || [] }
                     : p
             ));
             setEditingId(null);
@@ -57,14 +74,14 @@ export default function SecretSanta() {
         setSelfExclusions(updatedExclusions)
     }
 
-    
+
     const toggleRestriction = (giverId: number, receiverId: number) => {
         setParticipants((prev) =>
             prev.map((participant) => {
                 if (participant.id === giverId) {
                     const restrictions = participant.restrictions.includes(receiverId)
-                        ? participant.restrictions.filter((id) => id !== receiverId) 
-                        : [...participant.restrictions, receiverId]; 
+                        ? participant.restrictions.filter((id) => id !== receiverId)
+                        : [...participant.restrictions, receiverId];
 
                     return { ...participant, restrictions };
                 }
@@ -105,7 +122,7 @@ export default function SecretSanta() {
         }
 
         for (const assignment of assignments) {
-            console.log('Enviando correo con los datos:', assignment); 
+            console.log('Enviando correo con los datos:', assignment);
             try {
                 const response = await fetch('http://localhost:3000/api/sendEmail', {
                     method: 'POST',
@@ -116,6 +133,10 @@ export default function SecretSanta() {
                         giver: assignment.giver,
                         receiver: assignment.receiver,
                         wishlist: assignment.wishlist,
+                        creatorName: eventDetails.creatorName,
+                        giftPrice: eventDetails.giftPrice,
+                        eventDate: eventDetails.eventDate,
+                        location: eventDetails.location,
                     }),
                 });
 
@@ -132,6 +153,36 @@ export default function SecretSanta() {
     return (
         <div className="container mx-auto p-4 space-y-8">
             <h1 className="text-3xl font-bold mb-6">Secret Santa / Amigo Invisible</h1>
+
+            <Card className="mb-8">
+                <CardHeader>
+                    <CardTitle>Información del evento</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="grid grid-cols-1 gap-4">
+                        <Input
+                            placeholder="Nombre del creador del evento"
+                            value={eventDetails.creatorName}
+                            onChange={(e) => handleEventDetailsChange('creatorName', e.target.value)}
+                        />
+                        <Input
+                            placeholder="Precio aproximado del regalo"
+                            value={eventDetails.giftPrice}
+                            onChange={(e) => handleEventDetailsChange('giftPrice', e.target.value)}
+                        />
+                        <Input
+                            placeholder="Fecha del evento"
+                            value={eventDetails.eventDate}
+                            onChange={(e) => handleEventDetailsChange('eventDate', e.target.value)}
+                        />
+                        <Input
+                            placeholder="Lugar del evento"
+                            value={eventDetails.location}
+                            onChange={(e) => handleEventDetailsChange('location', e.target.value)}
+                        />
+                    </div>
+                </CardContent>
+            </Card>
             <Card className="mb-8">
                 <CardHeader>
                     <CardTitle>Añadir Participante</CardTitle>
