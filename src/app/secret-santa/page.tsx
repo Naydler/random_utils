@@ -1,11 +1,10 @@
 'use client'
-import { useState } from 'react'
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Car, PartyPopper, Pencil, Trash2 } from 'lucide-react'
-import { info } from 'console'
+import { Pencil, Trash2 } from 'lucide-react'
+import { useState } from 'react'
 
 interface Participant {
     id: number;
@@ -37,7 +36,6 @@ export default function SecretSanta() {
         setEventDetails((prev) => ({ ...prev, [field]: value }));
     };
     const addParticipant = () => {
-        console.log(eventDetails);
         if (newParticipant.name && newParticipant.email) {
             setParticipants([
                 ...participants,
@@ -122,9 +120,9 @@ export default function SecretSanta() {
         }
 
         for (const assignment of assignments) {
-            console.log('Enviando correo con los datos:', assignment);
             try {
-                const response = await fetch('http://localhost:3000/api/sendEmail', {
+
+                const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/sendEmail`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -139,6 +137,7 @@ export default function SecretSanta() {
                         location: eventDetails.location,
                     }),
                 });
+                console.log(response.url)
 
                 if (!response.ok) {
                     console.error(`Error al enviar correo a ${assignment.email}`);

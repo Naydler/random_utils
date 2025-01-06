@@ -4,14 +4,12 @@ import nodemailer from 'nodemailer';
 export async function POST(req: Request) {
     try {
         const { to, subject, giver, receiver, wishlist, creatorName, giftPrice, eventDate, location } = await req.json();
-        console.log('Parámetros:', { to, subject, giver, receiver, wishlist, creatorName, giftPrice, eventDate, location });
 
         if (!to || !subject || !giver || !receiver || !wishlist) {
             console.warn('Faltan parámetros requeridos:', { to, subject, giver, receiver, wishlist });
             return NextResponse.json({ message: 'Faltan parámetros requeridos' }, { status: 400 });
         }
 
-        console.log("Parámetros completos");
 
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -52,7 +50,6 @@ export async function POST(req: Request) {
                 html: emailHTML, 
             });
 
-            console.log('Correo enviado:', info);
         } catch (error) {
             console.error('Error al enviar el correo:', error);
             return NextResponse.json({ message: 'Error al enviar el correo', error }, { status: 500 });
