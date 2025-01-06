@@ -6,7 +6,7 @@ import Link from 'next/link';
 const menuItems = [
     { id: 1, title: 'Random Number', path: '/random-number', gradient: 'from-purple-500 to-pink-500' },
     { id: 2, title: 'Team Divider', path: '/random-team', gradient: 'from-green-500 to-teal-500' },
-    { id: 3, title: 'Random Roulette', path: '/random-roulette', gradient: 'from-blue-500 to-indigo-500' },
+    { id: 3, title: 'Random Roulette', path: '/roulette', gradient: 'from-blue-500 to-indigo-500' },
     { id: 4, title: 'Dice', path: '/dice', gradient: 'from-yellow-500 to-orange-500' },
     { id: 5, title: 'SecretSanta', path: '/secret-santa', gradient: 'from-red-500 to-green-500' },
 ];
