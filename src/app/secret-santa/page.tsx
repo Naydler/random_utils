@@ -137,7 +137,6 @@ export default function SecretSanta() {
                         location: eventDetails.location,
                     }),
                 });
-                console.log(response.url)
 
                 if (!response.ok) {
                     console.error(`Error al enviar correo a ${assignment.email}`);
